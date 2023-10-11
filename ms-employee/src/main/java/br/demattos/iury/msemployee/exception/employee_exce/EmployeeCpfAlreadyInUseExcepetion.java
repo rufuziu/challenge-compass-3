@@ -3,7 +3,7 @@ package br.demattos.iury.msemployee.exception.employee_exce;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code= HttpStatus.BAD_REQUEST)
+@ResponseStatus(code= HttpStatus.CONFLICT)
 public class EmployeeCpfAlreadyInUseExcepetion extends RuntimeException {
   public EmployeeCpfAlreadyInUseExcepetion(String message) {
     super(message);

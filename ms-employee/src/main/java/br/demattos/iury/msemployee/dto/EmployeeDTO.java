@@ -8,6 +8,10 @@ public class EmployeeDTO {
   @CPF
   private String cpf;
 
+  public EmployeeDTO(String cpf) {
+    this.cpf = cpf;
+  }
+
   public Long getId() {
     return id;
   }

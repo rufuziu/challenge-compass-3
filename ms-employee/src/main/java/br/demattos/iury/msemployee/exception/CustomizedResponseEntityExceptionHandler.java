@@ -53,7 +53,7 @@ public class CustomizedResponseEntityExceptionHandler extends
             ex.getMessage(),
             request.getDescription(false)
     );
-    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.CONFLICT);
   }
   @ExceptionHandler(EmployeeCpfNotFound.class)
   public final ResponseEntity<ErrorDetails> handleEmployeeCpfNotFoundException(

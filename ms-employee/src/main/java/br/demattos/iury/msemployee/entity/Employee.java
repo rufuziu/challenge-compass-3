@@ -5,8 +5,10 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
-@Entity
+@Entity(name ="employees")
 public class Employee {
+  public Employee() {
+  }
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

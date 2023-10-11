@@ -43,6 +43,11 @@ public class EmployeeService {
   }
   public boolean employeeCanVote(String cpf){
     if(repository.existsByCpf(cpf)) return true;
-    else throw new EmployeeCpfNotFound("Not found.");
+    else{
+      messageExce = new StringBuilder()
+              .append("Not found.")
+              .toString();
+      throw new EmployeeCpfNotFound(messageExce);
+    }
   }
 }
