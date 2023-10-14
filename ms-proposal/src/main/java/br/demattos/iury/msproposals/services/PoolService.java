@@ -37,11 +37,12 @@ public class PoolService {
     return mapper.map(repository.save(proposal), ProposalDTO.class);
   }
 
-  public List<ProposalDTO> getAllOpenedProposals(){
+  public List<ProposalDTO> getAllOpenedProposals() {
     return Arrays.asList(mapper.map(
             repository.findAll()
             , ProposalDTO[].class));
   }
+
   public boolean haveProposalEnded() {
     return repository.existsByCloseTimeLessThan(LocalDateTime.now());
   }

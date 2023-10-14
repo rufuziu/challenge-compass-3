@@ -1,6 +1,7 @@
 package br.demattos.iury.msproposals.controller;
 import br.demattos.iury.msproposals.dto.proposal.ProposalDTO;
 import br.demattos.iury.msproposals.services.PoolService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class ProposalResource {
   }
   @PostMapping("v1/proposals")
   public ResponseEntity<ProposalDTO> create(
-          @RequestBody ProposalDTO proposalDTO){
+          @RequestBody @Valid ProposalDTO proposalDTO){
     return ResponseEntity.status(HttpStatus.CREATED)
             .body(poolService.createProposal(proposalDTO));
   }

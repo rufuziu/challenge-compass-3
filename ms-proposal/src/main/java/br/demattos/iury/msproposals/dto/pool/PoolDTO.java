@@ -1,10 +1,6 @@
 package br.demattos.iury.msproposals.dto.pool;
 
 import br.demattos.iury.msproposals.enums.EResult;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +16,20 @@ public class PoolDTO {
   private LocalDateTime closeTime;
   private EResult result;
   private Long sumResult;
+
+  public PoolDTO(String description,
+                 Long approve,
+                 Long reject,
+                 LocalDateTime initTime,
+                 LocalDateTime closeTime,
+                 EResult result) {
+    this.description = description;
+    this.approve = approve;
+    this.reject = reject;
+    this.initTime = initTime;
+    this.closeTime = closeTime;
+    this.result = result;
+  }
 
   public Long getId() {
     return id;

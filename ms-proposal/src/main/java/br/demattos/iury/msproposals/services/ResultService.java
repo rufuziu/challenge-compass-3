@@ -34,30 +34,33 @@ public class ResultService {
   @Scheduled(fixedRateString = "${intervalTime}")
   public void closeEndedProposals() {
     if (poolService.haveProposalEnded()) {
-      List<PoolDTO> list = poolService.getAllEndedProposals();
-      for (PoolDTO p : list) p.setSumResult();
-      for (PoolDTO p: list){
-        if(p.getSumResult()>0) p.setResult(EResult.APPROVED);
-        else if(p.getSumResult()<0) p.setResult(EResult.REJECTED);
-        else p.setResult(EResult.DRAW);
-      }
-      for (PoolDTO p : list) {
-        switch (p.getResult()) {
-          case APPROVED:
-            approvedService.createApproved(
-                    mapper.map(p, ApprovedDTO.class));
-            poolService.removePollProposal(p.getId());
-            break;
-          case REJECTED:
-            rejectedService.createRejected(
-                    mapper.map(p, RejectedDTO.class));
-            poolService.removePollProposal(p.getId());
-            break;
-          case DRAW:
-            drawService.createDraw(mapper.map(p, DrawDTO.class));
-            poolService.removePollProposal(p.getId());
-            break;
-        }
+      generateResult();
+    }
+  }
+  public void generateResult(){
+    List<PoolDTO> list = poolService.getAllEndedProposals();
+    for (PoolDTO p : list) p.setSumResult();
+    for (PoolDTO p: list){
+      if(p.getSumResult()>0) p.setResult(EResult.APPROVED);
+      else if(p.getSumResult()<0) p.setResult(EResult.REJECTED);
+      else p.setResult(EResult.DRAW);
+    }
+    for (PoolDTO p : list) {
+      switch (p.getResult()) {
+        case APPROVED:
+          approvedService.createApproved(
+                  mapper.map(p, ApprovedDTO.class));
+          poolService.removePollProposal(p.getId());
+          break;
+        case REJECTED:
+          rejectedService.createRejected(
+                  mapper.map(p, RejectedDTO.class));
+          poolService.removePollProposal(p.getId());
+          break;
+        case DRAW:
+          drawService.createDraw(mapper.map(p, DrawDTO.class));
+          poolService.removePollProposal(p.getId());
+          break;
       }
     }
   }

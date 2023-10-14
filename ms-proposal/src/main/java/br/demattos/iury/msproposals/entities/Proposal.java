@@ -2,6 +2,8 @@ package br.demattos.iury.msproposals.entities;
 
 import br.demattos.iury.msproposals.enums.EResult;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
@@ -13,12 +15,16 @@ public class Proposal {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Column(unique = true)
   private String description;
   private Long approve = 0L;
   private Long reject = 0L;
   @Temporal(TemporalType.TIMESTAMP)
+  @Column(nullable = false)
   private LocalDateTime initTime;
   @Temporal(TemporalType.TIMESTAMP)
+  @Column(nullable = false)
   private LocalDateTime closeTime;
   @Enumerated(EnumType.STRING)
   private EResult result = EResult.POLLING;
