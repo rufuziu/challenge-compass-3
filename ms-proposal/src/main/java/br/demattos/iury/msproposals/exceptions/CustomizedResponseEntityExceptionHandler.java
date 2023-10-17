@@ -2,6 +2,9 @@ package br.demattos.iury.msproposals.exceptions;
 
 import br.demattos.iury.msproposals.exceptions.error.ErrorDetails;
 import br.demattos.iury.msproposals.exceptions.proposal_exce.ProposalAlreadyExistsException;
+import br.demattos.iury.msproposals.exceptions.proposal_exce.ProposalNotAbleToVoteException;
+import br.demattos.iury.msproposals.exceptions.proposal_exce.ProposalNotExistsException;
+import br.demattos.iury.msproposals.exceptions.vote_exce.VoteEmployeeAlreadyVotedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -16,7 +19,18 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class CustomizedResponseEntityExceptionHandler
-extends ResponseEntityExceptionHandler {
+        extends ResponseEntityExceptionHandler {
+  @ExceptionHandler(Exception.class)
+  public final ResponseEntity<ErrorDetails> handleAllException(Exception ex,
+                                                               WebRequest request) {
+    ErrorDetails errorDetails = new ErrorDetails(
+            LocalDateTime.now(),
+            ex.getMessage(),
+            request.getDescription(false)
+    );
+    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
   @ExceptionHandler(ProposalAlreadyExistsException.class)
   public final ResponseEntity<ErrorDetails> handleProposalAlreadyExistsException(
           Exception ex,
@@ -28,6 +42,43 @@ extends ResponseEntityExceptionHandler {
     );
     return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.CONFLICT);
   }
+
+  @ExceptionHandler(VoteEmployeeAlreadyVotedException.class)
+  public final ResponseEntity<ErrorDetails> handleVoteEmployeeAlreadyVotedException(
+          Exception ex,
+          WebRequest request) {
+    ErrorDetails errorDetails = new ErrorDetails(
+            LocalDateTime.now(),
+            ex.getMessage(),
+            request.getDescription(false)
+    );
+    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(ProposalNotAbleToVoteException.class)
+  public final ResponseEntity<ErrorDetails> handleProposalNotAbleToVoteException(
+          Exception ex,
+          WebRequest request) {
+    ErrorDetails errorDetails = new ErrorDetails(
+            LocalDateTime.now(),
+            ex.getMessage(),
+            request.getDescription(false)
+    );
+    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(ProposalNotExistsException.class)
+  public final ResponseEntity<ErrorDetails> handleProposalNotExistsException(
+          Exception ex,
+          WebRequest request) {
+    ErrorDetails errorDetails = new ErrorDetails(
+            LocalDateTime.now(),
+            ex.getMessage(),
+            request.getDescription(false)
+    );
+    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.BAD_REQUEST);
+  }
+
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
           MethodArgumentNotValidException ex,

@@ -1,23 +1,23 @@
-package br.demattos.iury.msproposals.dto.proposal;
+package br.demattos.iury.msproposals.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class ProposalDTO {
-  public ProposalDTO() {
+public class ProposalNewDTO {
+  public ProposalNewDTO() {
   }
   private Long id;
   @NotEmpty
   private String description;
   private LocalDateTime closeTime;
 
-  public ProposalDTO(String description) {
+  public ProposalNewDTO(String description) {
     this.description = description;
   }
 
-  public ProposalDTO(String description, LocalDateTime closeTime) {
+  public ProposalNewDTO(String description, LocalDateTime closeTime) {
     this.description = description;
     this.closeTime = closeTime;
   }

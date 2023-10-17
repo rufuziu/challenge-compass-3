@@ -1,9 +1,7 @@
 package br.demattos.iury.msproposals.repositories;
 
-import br.demattos.iury.msproposals.entities.Pool;
-import br.demattos.iury.msproposals.exceptions.proposal_exce.ProposalAlreadyExistsException;
-import jakarta.validation.UnexpectedTypeException;
-import org.junit.jupiter.api.BeforeEach;
+import br.demattos.iury.msproposals.entities.Proposal;
+import br.demattos.iury.msproposals.enums.EResult;
 import org.junit.jupiter.api.Test;
 import org.mockito.Spy;
 import org.modelmapper.ModelMapper;
@@ -19,9 +17,9 @@ import static br.demattos.iury.msproposals.common.ProposalConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-class PoolRepositoryTest {
+class ProposalRepositoryTest {
   @Autowired
-  private PoolRepository repository;
+  private ProposalRepository repository;
   @Autowired
   private TestEntityManager testEntityManager;
   @Spy
@@ -32,10 +30,10 @@ class PoolRepositoryTest {
   void savePool_withValidData_ReturnsPool() {
     //given
     LocalDateTime now = LocalDateTime.now();
-    Pool entity = mapper.map(VALID_PROPOSALDTO1, Pool.class);
+    Proposal entity = mapper.map(VALID_PROPOSALDTO_1, Proposal.class);
     entity.setInitTime(now);
     //then
-    Pool sut = repository.save(entity);
+    Proposal sut = repository.save(entity);
     //assert
     assertAll("PoolRepository save valid pool",
             () -> assertEquals(7L, sut.getId()),
@@ -50,7 +48,7 @@ class PoolRepositoryTest {
   void savePool_withInvalidData_ThrowsDataIntegrityViolationException() {
     //given
     LocalDateTime now = LocalDateTime.now();
-    Pool entity = mapper.map(INVALID_PROPOSALDTO, Pool.class);
+    Proposal entity = mapper.map(INVALID_PROPOSALDTO, Proposal.class);
     entity.setInitTime(now);
     //then
     //assert
@@ -62,10 +60,10 @@ class PoolRepositoryTest {
   void savePool_withExistingData_ThrowsDataIntegrityViolationException() {
     //given
     LocalDateTime now = LocalDateTime.now();
-    Pool entity = mapper.map(VALID_PROPOSALDTO4, Pool.class);
+    Proposal entity = mapper.map(VALID_PROPOSALDTO_4, Proposal.class);
     entity.setInitTime(now);
     //then
-    Pool savedPool = testEntityManager.persistAndFlush(entity);
+    Proposal savedPool = testEntityManager.persistAndFlush(entity);
     testEntityManager.detach(savedPool);
     savedPool.setId(null);
     //assert
@@ -77,13 +75,13 @@ class PoolRepositoryTest {
   void existsPool_ByCloseTimeLessThanTime_ReturnsTrue() {
     //given
     LocalDateTime now = LocalDateTime.now();
-    Pool entity = mapper.map(VALID_PROPOSALDTO1, Pool.class);
+    Proposal entity = mapper.map(VALID_PROPOSALDTO_1, Proposal.class);
     entity.setInitTime(now);
-    LocalDateTime time = VALID_PROPOSALDTO1
+    LocalDateTime time = VALID_PROPOSALDTO_1
             .getCloseTime()
             .plusMinutes(10);
     //then
-    Pool savedPool = repository.save(entity);
+    Proposal savedPool = repository.save(entity);
     //assert
     assertTrue(repository.existsByCloseTimeLessThan(time));
   }
@@ -91,7 +89,7 @@ class PoolRepositoryTest {
   @Test
   void notExistsPool_ByCloseTimeLessThanTime_ReturnsFalse() {
     //given
-    LocalDateTime time = VALID_PROPOSALDTO1
+    LocalDateTime time = VALID_PROPOSALDTO_1
             .getCloseTime()
             .plusMinutes(10);
     //then
@@ -103,16 +101,16 @@ class PoolRepositoryTest {
   void findAllByCloseTimeLessThan_ReturnsPoolList() {
     //given
     LocalDateTime now = LocalDateTime.now();
-    Pool entity1 = mapper.map(VALID_PROPOSALDTO1, Pool.class);
-    Pool entity2 = mapper.map(VALID_PROPOSALDTO2, Pool.class);
-    Pool entity3 = mapper.map(VALID_PROPOSALDTO3, Pool.class);
-    Pool entity4 = mapper.map(VALID_PROPOSALDTO4, Pool.class);
+    Proposal entity1 = mapper.map(VALID_PROPOSALDTO_1, Proposal.class);
+    Proposal entity2 = mapper.map(VALID_PROPOSALDTO_2, Proposal.class);
+    Proposal entity3 = mapper.map(VALID_PROPOSALDTO_3, Proposal.class);
+    Proposal entity4 = mapper.map(VALID_PROPOSALDTO_4, Proposal.class);
     entity1.setInitTime(now);
     entity2.setInitTime(now);
     entity3.setInitTime(now);
     entity4.setInitTime(now);
 
-    LocalDateTime time = VALID_PROPOSALDTO1
+    LocalDateTime time = VALID_PROPOSALDTO_1
             .getCloseTime()
             .plusMinutes(10);
     //then
@@ -120,7 +118,8 @@ class PoolRepositoryTest {
     repository.save(entity2);
     repository.save(entity3);
     repository.save(entity4);
-    List<Pool> list = repository.findAllByCloseTimeLessThan(time);
+    List<Proposal> list = repository
+            .findAllByResultAndCloseTimeLessThan(EResult.POLLING, time);
     //assert
     assertAll("PoolRepository find all closed proposals",
             () -> assertEquals(4, list.size()),

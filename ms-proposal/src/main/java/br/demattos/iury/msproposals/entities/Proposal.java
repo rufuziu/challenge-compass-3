@@ -2,16 +2,15 @@ package br.demattos.iury.msproposals.entities;
 
 import br.demattos.iury.msproposals.enums.EResult;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@MappedSuperclass
+@Entity(name="proposals")
 public class Proposal {
   public Proposal() {
   }
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -28,6 +27,8 @@ public class Proposal {
   private LocalDateTime closeTime;
   @Enumerated(EnumType.STRING)
   private EResult result = EResult.POLLING;
+  @OneToMany(mappedBy = "proposal", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private List<Vote> votes;
 
   public Long getId() {
     return id;
@@ -83,5 +84,13 @@ public class Proposal {
 
   public void setResult(EResult result) {
     this.result = result;
+  }
+
+  public List<Vote> getVotes() {
+    return votes;
+  }
+
+  public void setVotes(List<Vote> votes) {
+    this.votes = votes;
   }
 }

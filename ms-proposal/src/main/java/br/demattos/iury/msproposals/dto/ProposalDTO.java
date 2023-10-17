@@ -1,28 +1,29 @@
-package br.demattos.iury.msproposals.dto.pool;
+package br.demattos.iury.msproposals.dto;
 
 import br.demattos.iury.msproposals.enums.EResult;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class PoolDTO {
-  public PoolDTO() {
+public class ProposalDTO {
+  public ProposalDTO() {
   }
 
   private Long id;
   private String description;
-  private Long approve;
-  private Long reject;
+  private Long approve = 0L;
+  private Long reject = 0L;
   private LocalDateTime initTime;
   private LocalDateTime closeTime;
   private EResult result;
-  private Long sumResult;
+  private List<VoteDTO> votes;
 
-  public PoolDTO(String description,
-                 Long approve,
-                 Long reject,
-                 LocalDateTime initTime,
-                 LocalDateTime closeTime,
-                 EResult result) {
+  public ProposalDTO(String description,
+                     Long approve,
+                     Long reject,
+                     LocalDateTime initTime,
+                     LocalDateTime closeTime,
+                     EResult result) {
     this.description = description;
     this.approve = approve;
     this.reject = reject;
@@ -52,7 +53,7 @@ public class PoolDTO {
   }
 
   public void setApprove(Long approve) {
-    this.approve = approve;
+    this.approve += approve;
   }
 
   public Long getReject() {
@@ -60,7 +61,7 @@ public class PoolDTO {
   }
 
   public void setReject(Long reject) {
-    this.reject = reject;
+    this.reject += reject;
   }
 
   public LocalDateTime getInitTime() {
@@ -86,12 +87,11 @@ public class PoolDTO {
   public void setResult(EResult result) {
     this.result = result;
   }
-
-  public Long getSumResult() {
-    return sumResult;
+  public List<VoteDTO> getVotes() {
+    return votes;
   }
 
-  public void setSumResult() {
-    this.sumResult = this.approve - this.reject;
+  public void setVotes(List<VoteDTO> votes) {
+    this.votes = votes;
   }
 }

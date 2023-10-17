@@ -1,10 +1,9 @@
 package br.demattos.iury.msproposals.services;
 
-import br.demattos.iury.msproposals.dto.pool.PoolDTO;
-import br.demattos.iury.msproposals.dto.proposal.ProposalDTO;
-import br.demattos.iury.msproposals.entities.Pool;
-import br.demattos.iury.msproposals.repositories.PoolRepository;
-import jakarta.persistence.EntityNotFoundException;
+import br.demattos.iury.msproposals.dto.ProposalDTO;
+import br.demattos.iury.msproposals.dto.ProposalNewDTO;
+import br.demattos.iury.msproposals.entities.Proposal;
+import br.demattos.iury.msproposals.repositories.ProposalRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,31 +22,31 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PoolServiceTest {
+class ProposalServiceTest {
   @InjectMocks
-  private PoolService service;
+  private ProposalService service;
   @Spy
   private ModelMapper mapper;
   @Mock
-  private PoolRepository repository;
+  private ProposalRepository repository;
 
   @Test
   void createProposal_withCloseTimeProposalDTO_ReturnsProposalDTO() {
     //given
     LocalDateTime now = LocalDateTime.now();
-    Pool entity = mapper.map(VALID_PROPOSALDTO1, Pool.class);
+    Proposal entity = mapper.map(VALID_PROPOSALDTO_1, Proposal.class);
     entity.setId(1L);
     entity.setInitTime(now);
     when(repository.save(any())).thenReturn(entity);
     //then
-    ProposalDTO sut = service.createProposal(VALID_PROPOSALDTO1);
+    ProposalNewDTO sut = service.createProposal(VALID_PROPOSALDTO_1);
     //assert
     assertAll("PoolService create pool with closeTime",
             () -> assertEquals(1L,
                     sut.getId()),
-            () -> assertEquals(VALID_PROPOSALDTO1.getDescription(),
+            () -> assertEquals(VALID_PROPOSALDTO_1.getDescription(),
                     sut.getDescription()),
-            () -> assertEquals(VALID_PROPOSALDTO1.getCloseTime(),
+            () -> assertEquals(VALID_PROPOSALDTO_1.getCloseTime(),
                     sut.getCloseTime()));
 
   }
@@ -56,14 +55,14 @@ class PoolServiceTest {
   void createProposal_withNullCloseTimeProposalDTO_ReturnsProposalDTO() {
     //given
     LocalDateTime now = LocalDateTime.now();
-    Pool entity = mapper.map(VALID_PROPOSALDTO_WITHOUTCLOSETIME,
-            Pool.class);
+    Proposal entity = mapper.map(VALID_PROPOSALDTO_WITHOUTCLOSETIME,
+            Proposal.class);
     entity.setInitTime(now);
     entity.setCloseTime(now);
     entity.setId(1L);
     when(repository.save(any())).thenReturn(entity);
     //then
-    ProposalDTO sut = service
+    ProposalNewDTO sut = service
             .createProposal(VALID_PROPOSALDTO_WITHOUTCLOSETIME);
     //assert
     assertAll("PoolService create pool with null closeTime",
@@ -88,15 +87,16 @@ class PoolServiceTest {
 
   @Test
   void getAllOpenedProposals_ReturnsProposalDTOList() {
-    List<Pool> list = new ArrayList<>();
-    list.add(mapper.map(VALID_PROPOSALDTO1,Pool.class));
-    list.add(mapper.map(VALID_PROPOSALDTO2,Pool.class));
-    list.add(mapper.map(VALID_PROPOSALDTO3,Pool.class));
-    list.add(mapper.map(VALID_PROPOSALDTO4,Pool.class));
+    List<Proposal> list = new ArrayList<>();
+    list.add(mapper.map(VALID_PROPOSALDTO_1, Proposal.class));
+    list.add(mapper.map(VALID_PROPOSALDTO_2, Proposal.class));
+    list.add(mapper.map(VALID_PROPOSALDTO_3, Proposal.class));
+    list.add(mapper.map(VALID_PROPOSALDTO_4, Proposal.class));
 
-    when(repository.findAll()).thenReturn(list);
+    when(repository.findAllByResultAndCloseTimeLessThan(any(),
+            any())).thenReturn(list);
     //then
-    List<ProposalDTO> sut = service.getAllOpenedProposals();
+    List<ProposalDTO> sut = service.getAllEndedProposals();
 
     //assert
     assertAll("PoolRepository find all opened proposals",
@@ -107,26 +107,27 @@ class PoolServiceTest {
   void haveProposalEnded_ReturnsTrue() {
     when(repository.existsByCloseTimeLessThan(any()))
             .thenReturn(true);
-    assertTrue(service.haveProposalEnded());
+    assertTrue(service.hasAnyProposalEnded());
   }
 
   @Test
   void haveProposalEnded_ReturnsFalse() {
     when(repository.existsByCloseTimeLessThan(any()))
             .thenReturn(false);
-    assertFalse(service.haveProposalEnded());
+    assertFalse(service.hasAnyProposalEnded());
   }
 
   @Test
   void getAllEndedProposals_ReturnsPoolDTOList() {
-    List<Pool> list = new ArrayList<>();
-    list.add(mapper.map(VALID_PROPOSALDTO1,Pool.class));
-    list.add(mapper.map(VALID_PROPOSALDTO2,Pool.class));
-    list.add(mapper.map(VALID_PROPOSALDTO3,Pool.class));
-    list.add(mapper.map(VALID_PROPOSALDTO4,Pool.class));
-    when(repository.findAllByCloseTimeLessThan(any())).thenReturn(list);
+    List<Proposal> list = new ArrayList<>();
+    list.add(mapper.map(VALID_PROPOSALDTO_1, Proposal.class));
+    list.add(mapper.map(VALID_PROPOSALDTO_2, Proposal.class));
+    list.add(mapper.map(VALID_PROPOSALDTO_3, Proposal.class));
+    list.add(mapper.map(VALID_PROPOSALDTO_4, Proposal.class));
+    when(repository.findAllByResultAndCloseTimeLessThan(any(), any()))
+            .thenReturn(list);
 
-    List<PoolDTO> sut = service.getAllEndedProposals();
+    List<ProposalDTO> sut = service.getAllEndedProposals();
     assertAll("PoolRepository find all closed proposals",
             () -> assertEquals(4, sut.size()));
   }

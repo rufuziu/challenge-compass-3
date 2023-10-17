@@ -1,8 +1,10 @@
 package br.demattos.iury.msproposals.controller;
 
-import br.demattos.iury.msproposals.dto.proposal.ProposalDTO;
+import br.demattos.iury.msproposals.dto.ProposalDTO;
+import br.demattos.iury.msproposals.dto.ProposalNewDTO;
 import br.demattos.iury.msproposals.exceptions.proposal_exce.ProposalAlreadyExistsException;
-import br.demattos.iury.msproposals.services.PoolService;
+import br.demattos.iury.msproposals.services.ProposalService;
+import br.demattos.iury.msproposals.services.VoteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +31,18 @@ class ProposalResourceTest {
   @Autowired
   private ObjectMapper objectMapper;
   @MockBean
-  private PoolService service;
+  private ProposalService proposalService;
+  @MockBean
+  private VoteService voteService;
 
   @Test
   void createProposal_withValidData_ReturnsCreatedProposalDTO() throws
           Exception {
-    ProposalDTO createProp = VALID_PROPOSALDTO1;
+    ProposalNewDTO createProp = VALID_PROPOSALDTO_1;
     createProp.setId(1L);
-    when(service.createProposal(any())).thenReturn(createProp);
+    when(proposalService.createProposal(any())).thenReturn(createProp);
     mockMvc.perform(post("/api/v1/proposals")
-                    .content(objectMapper.writeValueAsString(VALID_PROPOSALDTO1))
+                    .content(objectMapper.writeValueAsString(VALID_PROPOSALDTO_1))
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(createProp.getId()))
@@ -49,9 +53,9 @@ class ProposalResourceTest {
   @Test
   void createProposal_withRepeatedData_ReturnsConflict() throws
           Exception {
-    when(service.createProposal(any())).thenThrow(ProposalAlreadyExistsException.class);
+    when(proposalService.createProposal(any())).thenThrow(ProposalAlreadyExistsException.class);
     mockMvc.perform(post("/api/v1/proposals")
-                    .content(objectMapper.writeValueAsString(VALID_PROPOSALDTO1))
+                    .content(objectMapper.writeValueAsString(VALID_PROPOSALDTO_1))
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isConflict());
   }
@@ -66,13 +70,13 @@ class ProposalResourceTest {
   }
 
   @Test
-  void getAllProposalsOpened_ReturnsProposalDTOList() throws Exception {
-    List<ProposalDTO> list = new ArrayList<>();
-    list.add(VALID_PROPOSALDTO1);
-    list.add(VALID_PROPOSALDTO2);
-    list.add(VALID_PROPOSALDTO3);
-    list.add(VALID_PROPOSALDTO4);
-    when(service.getAllOpenedProposals()).thenReturn(list);
+  void getAllPollingProposals_ReturnsProposalDTOList() throws Exception {
+    List<ProposalNewDTO> list = new ArrayList<>();
+    list.add(VALID_PROPOSALDTO_1);
+    list.add(VALID_PROPOSALDTO_1);
+    list.add(VALID_PROPOSALDTO_1);
+    list.add(VALID_PROPOSALDTO_1);
+    when(proposalService.getPollingProposals()).thenReturn(list);
     mockMvc.perform(get("/api/v1/proposals"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isNotEmpty());
