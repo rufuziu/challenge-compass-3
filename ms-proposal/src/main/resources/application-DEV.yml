@@ -23,5 +23,12 @@ spring:
     defer-datasource-initialization: false
     database-platform: org.hibernate.dialect.H2Dialect
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
 server:
-  port: 8080
+  port: 0

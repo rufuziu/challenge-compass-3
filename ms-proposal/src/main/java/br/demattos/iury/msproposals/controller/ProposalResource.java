@@ -42,16 +42,14 @@ public class ProposalResource {
   @PostMapping("v1/votes")
   public ResponseEntity<Void> vote(@RequestBody @Valid
                                    VoteDTO voteDTO) {
-    if(!proposalService.findProposalById(voteDTO.getProposalId())){
+    if (!proposalService.findProposalById(voteDTO.getProposalId())) {
       throw new ProposalNotExistsException("Proposal not exists.");
-    }
-    else if (proposalService.checkProposalIsAbleToVote(voteDTO.getProposalId())) {
-      throw new
-              ProposalNotAbleToVoteException("Proposal not able to vote.");
-
-    } else {
+    } else if (proposalService.checkProposalIsAbleToVote(voteDTO.getProposalId())) {
       voteService.create(voteDTO);
       return ResponseEntity.ok().build();
+    } else {
+      throw new
+              ProposalNotAbleToVoteException("Proposal not able to vote.");
     }
   }
 }

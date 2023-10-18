@@ -64,7 +64,7 @@ public class ProposalService {
   }
 
   public Boolean checkProposalIsAbleToVote(Long id) {
-    return repository.existsByIdAndResultAndCloseTimeLessThan(
+    return repository.existsByIdAndResultAndCloseTimeGreaterThan(
             id,
             EResult.POLLING,
             LocalDateTime.now());

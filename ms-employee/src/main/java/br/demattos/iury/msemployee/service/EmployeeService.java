@@ -41,8 +41,10 @@ public class EmployeeService {
                     EmployeeDTO.class
             );
   }
-  public boolean employeeCanVote(String cpf){
-    if(repository.existsByCpf(cpf)) return true;
+  public Boolean employeeCanVote(String cpf){
+    if(repository.existsByCpf(cpf)){
+      return true;
+    }
     else{
       messageExce = new StringBuilder()
               .append("Not found.")

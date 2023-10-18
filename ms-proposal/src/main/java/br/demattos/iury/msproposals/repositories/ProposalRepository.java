@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface ProposalRepository extends JpaRepository<Proposal, Long> {
   Optional<Proposal> findByDescription(String description);
   Boolean existsByCloseTimeLessThan(LocalDateTime time);
-  Boolean existsByIdAndResultAndCloseTimeLessThan(Long id,
+  Boolean existsByIdAndResultAndCloseTimeGreaterThan(Long id,
                                                   EResult result,
                                                   LocalDateTime time);
   List<Proposal> findAllByResultAndCloseTimeLessThan(EResult result,
