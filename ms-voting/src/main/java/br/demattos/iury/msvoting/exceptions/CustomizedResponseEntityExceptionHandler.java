@@ -1,10 +1,10 @@
-package br.demattos.iury.msproposals.exceptions;
+package br.demattos.iury.msvoting.exceptions;
 
-import br.demattos.iury.msproposals.exceptions.error.ErrorDetails;
-import br.demattos.iury.msproposals.exceptions.proposal_exce.ProposalAlreadyExistsException;
-import br.demattos.iury.msproposals.exceptions.proposal_exce.ProposalNotAbleToVoteException;
-import br.demattos.iury.msproposals.exceptions.proposal_exce.ProposalNotExistsException;
-import br.demattos.iury.msproposals.exceptions.vote_exce.VoteEmployeeAlreadyVotedException;
+import br.demattos.iury.msvoting.exceptions.employee_exce.EmployeeCpfNotFound;
+import br.demattos.iury.msvoting.exceptions.errors.ErrorDetails;
+import br.demattos.iury.msvoting.exceptions.proposal_exce.ProposalNotAbleToVoteException;
+import br.demattos.iury.msvoting.exceptions.proposal_exce.ProposalNotExistsException;
+import br.demattos.iury.msvoting.exceptions.vote_exce.VoteEmployeeAlreadyVotedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -31,8 +31,8 @@ public class CustomizedResponseEntityExceptionHandler
     return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @ExceptionHandler(ProposalAlreadyExistsException.class)
-  public final ResponseEntity<ErrorDetails> handleProposalAlreadyExistsException(
+  @ExceptionHandler(EmployeeCpfNotFound.class)
+  public final ResponseEntity<ErrorDetails> handleEmployeeCpfNotFoundException(
           Exception ex,
           WebRequest request) {
     ErrorDetails errorDetails = new ErrorDetails(
@@ -40,9 +40,8 @@ public class CustomizedResponseEntityExceptionHandler
             ex.getMessage(),
             request.getDescription(false)
     );
-    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.CONFLICT);
+    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
   }
-
   @ExceptionHandler(VoteEmployeeAlreadyVotedException.class)
   public final ResponseEntity<ErrorDetails> handleVoteEmployeeAlreadyVotedException(
           Exception ex,
@@ -54,7 +53,6 @@ public class CustomizedResponseEntityExceptionHandler
     );
     return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.CONFLICT);
   }
-
   @ExceptionHandler(ProposalNotAbleToVoteException.class)
   public final ResponseEntity<ErrorDetails> handleProposalNotAbleToVoteException(
           Exception ex,
@@ -78,7 +76,6 @@ public class CustomizedResponseEntityExceptionHandler
     );
     return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
   }
-
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
           MethodArgumentNotValidException ex,

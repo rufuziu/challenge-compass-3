@@ -17,7 +17,7 @@ public interface ProposalResourceProxy {
   @GetMapping("/v1/proposals")
   public ResponseEntity<List<ProposalNewDTO>> getPoll();
   @PostMapping("/v1/votes")
-  public ResponseEntity<Boolean> vote(
+  public ResponseEntity<Void> vote(
           @RequestBody @Valid
           VoteDTO voteDTO
   );

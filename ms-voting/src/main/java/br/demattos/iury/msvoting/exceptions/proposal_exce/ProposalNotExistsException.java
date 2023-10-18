@@ -1,4 +1,4 @@
-package br.demattos.iury.msproposals.exceptions.proposal_exce;
+package br.demattos.iury.msvoting.exceptions.proposal_exce;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,30 +1,48 @@
 package br.demattos.iury.msvoting.controller;
 
-import br.demattos.iury.msvoting.proxies.EmployeeResourceProxy;
+import br.demattos.iury.msvoting.dtos.ProposalNewDTO;
+import br.demattos.iury.msvoting.dtos.VoteDTO;
+import br.demattos.iury.msvoting.services.EmployeeResourceService;
+import br.demattos.iury.msvoting.services.ProposalResourceService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/")
 @Validated
 public class VotingController {
-  private EmployeeResourceProxy employeeResourceProxy;
-
-  public VotingController(EmployeeResourceProxy employeeResourceProxy) {
-    this.employeeResourceProxy = employeeResourceProxy;
+  private final EmployeeResourceService employeeResourceService;
+  private final ProposalResourceService proposalResourceService;
+  public VotingController(EmployeeResourceService employeeResourceService,
+                          ProposalResourceService proposalResourceService) {
+    this.employeeResourceService = employeeResourceService;
+    this.proposalResourceService = proposalResourceService;
   }
 
-  @GetMapping("v1/voting/employees/{cpf}")
-  public ResponseEntity<Boolean> canVote(@PathVariable(name = "cpf")
-                                         @NotBlank(message = "CPF can't be blank")
-                                         @CPF String cpf) {
-    return employeeResourceProxy.canVote(cpf);
+  @GetMapping("v1/voting/{cpf}")
+  public ResponseEntity<String> canEmployeeVote(@PathVariable(name = "cpf")
+                                        @NotBlank(message = "CPF can't be blank")
+                                        @CPF String cpf) {
+    return ResponseEntity.ok(employeeResourceService.canEmployeeVoteString(cpf));
   }
-
+  @GetMapping("v1/voting")
+  public ResponseEntity<List<ProposalNewDTO>> getProposalPoll() {
+    return  proposalResourceService.getPoll();
+  }
+  @PostMapping("v1/voting")
+  public ResponseEntity<Void> vote(@RequestBody @Valid
+                                   VoteDTO voteDTO) {
+   if(employeeResourceService.canEmployeeVoteBoolean(voteDTO.getEmployeeCpf())){
+     return proposalResourceService.vote(voteDTO);
+   }
+   else {
+     return ResponseEntity.badRequest().build();
+   }
+  }
 }
