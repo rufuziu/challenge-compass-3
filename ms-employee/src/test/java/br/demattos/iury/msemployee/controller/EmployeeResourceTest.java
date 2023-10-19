@@ -1,8 +1,8 @@
 package br.demattos.iury.msemployee.controller;
 
 import br.demattos.iury.msemployee.dto.EmployeeDTO;
-import br.demattos.iury.msemployee.exception.employee_exce.EmployeeCpfAlreadyInUseExcepetion;
-import br.demattos.iury.msemployee.exception.employee_exce.EmployeeCpfNotFound;
+import br.demattos.iury.msemployee.exceptions.employee_exce.EmployeeCpfAlreadyInUseExcepetion;
+import br.demattos.iury.msemployee.exceptions.employee_exce.EmployeeCpfNotFound;
 import br.demattos.iury.msemployee.service.EmployeeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;

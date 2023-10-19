@@ -23,5 +23,40 @@ spring:
     defer-datasource-initialization: false
     database-platform: org.hibernate.dialect.H2Dialect
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://1234567890:1234567890@localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: 'health,metrics,info'
+
+info:
+  application:
+    name: ${spring.application.name}
+    description: Challenge III - IURY DE MATTOS [PROD]
+
+logging:
+  file:
+    name: ./logs/ms-proposal.log
+
+mq:
+  queues:
+    voting-result: voting-result
+
 server:
-  port: 8080
+  port: 0

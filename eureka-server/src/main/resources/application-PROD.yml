@@ -1,7 +1,31 @@
-server:
-  port: 8761
+spring:
+  security:
+    user:
+      name: 1234567890
+      password: 1234567890
 
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: 'health,metrics,info'
+
+info:
+  application:
+    name: ${spring.application.name}
+    description: Challenge III - IURY DE MATTOS [PROD]
+
+logging:
+  file:
+    name: ./logs/eureka-server.log
+
+server:
+  port: 8761

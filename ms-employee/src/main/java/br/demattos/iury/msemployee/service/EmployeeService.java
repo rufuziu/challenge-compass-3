@@ -2,12 +2,10 @@ package br.demattos.iury.msemployee.service;
 
 import br.demattos.iury.msemployee.dto.EmployeeDTO;
 import br.demattos.iury.msemployee.entity.Employee;
-import br.demattos.iury.msemployee.exception.employee_exce.EmployeeCpfAlreadyInUseExcepetion;
-import br.demattos.iury.msemployee.exception.employee_exce.EmployeeCpfNotFound;
+import br.demattos.iury.msemployee.exceptions.employee_exce.EmployeeCpfAlreadyInUseExcepetion;
+import br.demattos.iury.msemployee.exceptions.employee_exce.EmployeeCpfNotFound;
 import br.demattos.iury.msemployee.repository.EmployeeRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 @Service
