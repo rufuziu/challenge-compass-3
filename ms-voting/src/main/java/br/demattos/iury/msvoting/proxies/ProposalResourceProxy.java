@@ -15,17 +15,22 @@ import java.util.List;
 
 @FeignClient(value = "ms-proposal", path = "/api")
 public interface ProposalResourceProxy {
+  @GetMapping("/v1/proposals/{id}")
+  public ResponseEntity<ProposalResultDTO> getProposal
+          (@PathVariable("id") Long id);
+
   @GetMapping("/v1/proposals")
   public ResponseEntity<List<ProposalNewDTO>> getPoll();
+
   @GetMapping("/v1/proposals/draw")
   public ResponseEntity<List<ProposalResultDTO>> getDraw();
+
   @GetMapping("/v1/proposals/rejected")
   public ResponseEntity<List<ProposalResultDTO>> getRejected();
+
   @GetMapping("/v1/proposals/approved")
   public ResponseEntity<List<ProposalResultDTO>> getApproved();
+
   @PostMapping("/v1/votes")
-  public ResponseEntity<Void> vote(
-          @RequestBody @Valid
-          VoteDTO voteDTO
-  );
+  public ResponseEntity<Void> vote(@RequestBody @Valid VoteDTO voteDTO);
 }

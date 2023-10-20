@@ -6,6 +6,7 @@ import br.demattos.iury.msproposal.dtos.ProposalResultDTO;
 import br.demattos.iury.msproposal.entities.Proposal;
 import br.demattos.iury.msproposal.enums.EResult;
 import br.demattos.iury.msproposal.exceptions.proposal_exce.ProposalAlreadyExistsException;
+import br.demattos.iury.msproposal.exceptions.proposal_exce.ProposalNotExistsException;
 import br.demattos.iury.msproposal.repositories.ProposalRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +53,7 @@ public class ProposalService {
             repository.findAllByResult(EResult.POLLING)
             , ProposalNewDTO[].class));
   }
+
   public List<ProposalResultDTO> getAllDrawResult() {
     return Arrays.asList(mapper.map(
             repository.findAllByResult(EResult.DRAW)
@@ -70,6 +72,14 @@ public class ProposalService {
             , ProposalResultDTO[].class));
   }
 
+  public ProposalResultDTO getById(Long id) {
+    Optional<Proposal> prop = repository.findById(id);
+    if (prop.isEmpty()) {
+      throw new ProposalNotExistsException("Proposal not exists");
+    } else {
+      return mapper.map(prop.get(), ProposalResultDTO.class);
+    }
+  }
 
   public Boolean hasAnyProposalEnded() {
     return repository.existsByCloseTimeLessThan(LocalDateTime.now());

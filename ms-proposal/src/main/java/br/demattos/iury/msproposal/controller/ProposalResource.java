@@ -39,10 +39,17 @@ public class ProposalResource {
   public ResponseEntity<List<ProposalNewDTO>> getPoll() {
     return ResponseEntity.ok(proposalService.getPollingProposals());
   }
+
+  @GetMapping("v1/proposals/{id}")
+  public ResponseEntity<ProposalResultDTO> getById(@PathVariable Long id) {
+    return ResponseEntity.ok(proposalService.getById(id));
+  }
+
   @GetMapping("v1/proposals/draw")
   public ResponseEntity<List<ProposalResultDTO>> getDraw() {
     return ResponseEntity.ok(proposalService.getAllDrawResult());
   }
+
   @GetMapping("v1/proposals/approved")
   public ResponseEntity<List<ProposalResultDTO>> getApproved() {
     return ResponseEntity.ok(proposalService.getAllApprovedResult());
