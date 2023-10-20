@@ -2,6 +2,7 @@ package br.demattos.iury.msproposal.services;
 
 import br.demattos.iury.msproposal.dtos.ProposalDTO;
 import br.demattos.iury.msproposal.dtos.ProposalNewDTO;
+import br.demattos.iury.msproposal.dtos.ProposalResultDTO;
 import br.demattos.iury.msproposal.entities.Proposal;
 import br.demattos.iury.msproposal.enums.EResult;
 import br.demattos.iury.msproposal.exceptions.proposal_exce.ProposalAlreadyExistsException;
@@ -51,6 +52,24 @@ public class ProposalService {
             repository.findAllByResult(EResult.POLLING)
             , ProposalNewDTO[].class));
   }
+  public List<ProposalResultDTO> getAllDrawResult() {
+    return Arrays.asList(mapper.map(
+            repository.findAllByResult(EResult.DRAW)
+            , ProposalResultDTO[].class));
+  }
+
+  public List<ProposalResultDTO> getAllApprovedResult() {
+    return Arrays.asList(mapper.map(
+            repository.findAllByResult(EResult.APPROVED)
+            , ProposalResultDTO[].class));
+  }
+
+  public List<ProposalResultDTO> getAllRejectedResult() {
+    return Arrays.asList(mapper.map(
+            repository.findAllByResult(EResult.REJECTED)
+            , ProposalResultDTO[].class));
+  }
+
 
   public Boolean hasAnyProposalEnded() {
     return repository.existsByCloseTimeLessThan(LocalDateTime.now());

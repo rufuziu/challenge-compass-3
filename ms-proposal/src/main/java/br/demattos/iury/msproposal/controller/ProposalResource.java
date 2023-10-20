@@ -1,6 +1,7 @@
 package br.demattos.iury.msproposal.controller;
 
 import br.demattos.iury.msproposal.dtos.ProposalNewDTO;
+import br.demattos.iury.msproposal.dtos.ProposalResultDTO;
 import br.demattos.iury.msproposal.dtos.VoteDTO;
 import br.demattos.iury.msproposal.exceptions.proposal_exce.ProposalNotAbleToVoteException;
 import br.demattos.iury.msproposal.exceptions.proposal_exce.ProposalNotExistsException;
@@ -37,6 +38,19 @@ public class ProposalResource {
   @GetMapping("v1/proposals")
   public ResponseEntity<List<ProposalNewDTO>> getPoll() {
     return ResponseEntity.ok(proposalService.getPollingProposals());
+  }
+  @GetMapping("v1/proposals/draw")
+  public ResponseEntity<List<ProposalResultDTO>> getDraw() {
+    return ResponseEntity.ok(proposalService.getAllDrawResult());
+  }
+  @GetMapping("v1/proposals/approved")
+  public ResponseEntity<List<ProposalResultDTO>> getApproved() {
+    return ResponseEntity.ok(proposalService.getAllApprovedResult());
+  }
+
+  @GetMapping("v1/proposals/rejected")
+  public ResponseEntity<List<ProposalResultDTO>> getRejected() {
+    return ResponseEntity.ok(proposalService.getAllRejectedResult());
   }
 
   @PostMapping("v1/votes")

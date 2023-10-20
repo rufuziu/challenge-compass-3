@@ -1,6 +1,7 @@
 package br.demattos.iury.msvoting.controller;
 
 import br.demattos.iury.msvoting.dtos.ProposalNewDTO;
+import br.demattos.iury.msvoting.dtos.ProposalResultDTO;
 import br.demattos.iury.msvoting.dtos.VoteDTO;
 import br.demattos.iury.msvoting.services.EmployeeResourceService;
 import br.demattos.iury.msvoting.services.ProposalResourceService;
@@ -44,5 +45,19 @@ public class VotingController {
    else {
      return ResponseEntity.badRequest().build();
    }
+  }
+
+  @GetMapping("v1/voting/result/draw")
+  public ResponseEntity<List<ProposalResultDTO>> getDraw() {
+    return  proposalResourceService.getDraws();
+  }
+  @GetMapping("v1/voting/result/approved")
+  public ResponseEntity<List<ProposalResultDTO>> getApproved() {
+    return  proposalResourceService.getApproved();
+  }
+
+  @GetMapping("v1/voting/result/rejected")
+  public ResponseEntity<List<ProposalResultDTO>> getRejected() {
+    return  proposalResourceService.getRejected();
   }
 }

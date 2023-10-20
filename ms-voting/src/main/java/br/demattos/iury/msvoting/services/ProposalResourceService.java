@@ -1,6 +1,7 @@
 package br.demattos.iury.msvoting.services;
 
 import br.demattos.iury.msvoting.dtos.ProposalNewDTO;
+import br.demattos.iury.msvoting.dtos.ProposalResultDTO;
 import br.demattos.iury.msvoting.dtos.VoteDTO;
 import br.demattos.iury.msvoting.exceptions.proposal_exce.ProposalNotAbleToVoteException;
 import br.demattos.iury.msvoting.exceptions.proposal_exce.ProposalNotExistsException;
@@ -24,6 +25,15 @@ public class ProposalResourceService {
     return proposalResourceProxy.getPoll();
   }
 
+  public ResponseEntity<List<ProposalResultDTO>> getDraws() {
+    return proposalResourceProxy.getDraw();
+  }
+  public ResponseEntity<List<ProposalResultDTO>> getApproved() {
+    return proposalResourceProxy.getApproved();
+  }
+  public ResponseEntity<List<ProposalResultDTO>> getRejected() {
+    return proposalResourceProxy.getRejected();
+  }
   public ResponseEntity<Void> vote(VoteDTO voteDTO) {
     try {
       return proposalResourceProxy.vote(voteDTO);

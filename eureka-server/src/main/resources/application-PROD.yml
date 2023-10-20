@@ -1,8 +1,8 @@
 spring:
   security:
     user:
-      name: 1234567890
-      password: 1234567890
+      name: admin
+      password: admin
 
 eureka:
   client:
